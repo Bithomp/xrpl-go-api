@@ -17,6 +17,19 @@ var (
 	X_ADDRESS_PREFIX_BYTES_TEST = []byte{0x04, 0x93}
 )
 
+func Generate(algorithm string) (string, string, error) {
+	seed, publicKey, _, err := crypto.GenerateKeyPair(algorithm)
+	if err != nil {
+		return "", "", err
+	}
+
+	// generate account id
+	accountId := crypto.Sha256RipeMD160(publicKey)
+	rAddress := encodeAccountID(accountId)
+
+	return seed, rAddress, nil
+}
+
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/ripple-address-codec/src/index.ts#L25
 func RAddressToXAddress(rAddress string, tag *uint32, test bool) string {
 	accountId, err := decodeAccountID(rAddress)
