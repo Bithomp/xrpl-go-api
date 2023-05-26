@@ -10,5 +10,7 @@ go test -v ./...
 
 ```Shell
 go clean -i ./...
-go mod tidy # To import all the necessary modules
+
+# To import all the necessary modules
+go mod tidy 
 ```
