@@ -9,7 +9,6 @@ import (
 )
 
 const (
-	SECP256K1_SEED_LENGTH        = 16
 	SECP256K1_PRIVATE_KEY_PREFIX = 0x00
 )
 
@@ -26,7 +25,7 @@ var (
 func GenerateSeedSecp256k1(entropy []byte) (string, error) {
 	if entropy == nil {
 		var err error
-		entropy, err = GenerateSeedEntropy()
+		entropy, err = GenerateEntropy()
 		if err != nil {
 			return "", err
 		}
@@ -39,11 +38,11 @@ func GenerateSeedSecp256k1(entropy []byte) (string, error) {
 
 func DeriveKeypairSecp256k1(entropy []byte, sequence *uint32) ([]byte, []byte, error) {
 	if entropy == nil {
-		return nil, nil, fmt.Errorf("entropy is missed")
+		return nil, nil, fmt.Errorf("entropy is nil")
 	}
 
-	if len(entropy) != SECP256K1_SEED_LENGTH {
-		return nil, nil, fmt.Errorf("entropy length is not 16")
+	if len(entropy) != ENTROPY_LENGTH {
+		return nil, nil, fmt.Errorf("entropy length is not correct")
 	}
 
 	// This private generator represents the `root` private key, and is what's

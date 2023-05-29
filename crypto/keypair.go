@@ -6,13 +6,13 @@ import (
 )
 
 const (
-	SEED_ENTROPY_LENGTH = 16
+	ENTROPY_LENGTH      = 16
 	ALGORITHM_ED25519   = "ed25519"
 	ALGORITHM_SECP256K1 = "secp256k1"
 )
 
-func GenerateSeedEntropy() ([]byte, error) {
-	entropy := make([]byte, SEED_ENTROPY_LENGTH)
+func GenerateEntropy() ([]byte, error) {
+	entropy := make([]byte, ENTROPY_LENGTH)
 	_, err := rand.Read(entropy)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func DeriveKeypair(seed string) ([]byte, []byte, error) {
 }
 
 func GenerateKeyPair(algorithm string) (string, []byte, []byte, error) {
-	entropy, err := GenerateSeedEntropy()
+	entropy, err := GenerateEntropy()
 	if err != nil {
 		return "", nil, nil, err
 	}

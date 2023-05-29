@@ -7,7 +7,6 @@ import (
 )
 
 const (
-	ED25519_SEED_LENGTH        = 16
 	ED25519_PRIVATE_KEY_PREFIX = 0xED
 )
 
@@ -18,7 +17,7 @@ var (
 func GenerateSeedEd25519(entropy []byte) (string, error) {
 	if entropy == nil {
 		var err error
-		entropy, err = GenerateSeedEntropy()
+		entropy, err = GenerateEntropy()
 		if err != nil {
 			return "", err
 		}
@@ -34,8 +33,8 @@ func DeriveKeypairEd25519(entropy []byte) ([]byte, []byte, error) {
 		return nil, nil, fmt.Errorf("entropy is nil")
 	}
 
-	if len(entropy) != ED25519_SEED_LENGTH {
-		return nil, nil, fmt.Errorf("entropy length is not 16")
+	if len(entropy) != ENTROPY_LENGTH {
+		return nil, nil, fmt.Errorf("entropy length is not correct")
 	}
 
 	r := bytes.NewReader(Sha512Half(entropy))
