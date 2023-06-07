@@ -1,6 +1,7 @@
 package wallet
 
 import (
+	"github.com/Bithomp/xrpl-go-api/address_codec"
 	"github.com/Bithomp/xrpl-go-api/crypto"
 )
 
@@ -12,7 +13,7 @@ func Generate(algorithm string) (string, string, error) {
 
 	// generate account id
 	accountId := crypto.Sha256RipeMD160(publicKey)
-	rAddress := crypto.EncodeAccountID(accountId)
+	rAddress := address_codec.EncodeAccountID(accountId)
 
 	return seed, rAddress, nil
 }

@@ -1,7 +1,9 @@
-package crypto
+package address_codec
 
 import (
 	"fmt"
+
+	"github.com/Bithomp/xrpl-go-api/crypto"
 )
 
 const (
@@ -27,7 +29,7 @@ func ClassicAddressToXAddress(rAddress string, tag *uint32, test bool) string {
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/ripple-address-codec/src/index.ts#L76
 func XAddressToClassicAddress(xAddress string) (string, *uint32, bool) {
-	decoded, err := Base58Decode(xAddress, ALPHABET)
+	decoded, err := crypto.Base58Decode(xAddress, crypto.ALPHABET)
 	if err != nil {
 		return "", nil, false
 	}
@@ -69,11 +71,11 @@ func EncodeAccountID(accountId []byte) string {
 	// add payload length, 1 byte
 	encoded := append([]byte{byte(ACCOUNT_ID)}, accountId...)
 
-	return Base58Encode(encoded, ALPHABET)
+	return crypto.Base58Encode(encoded, crypto.ALPHABET)
 }
 
 func DecodeAccountID(rAddress string) ([]byte, error) {
-	decoded, err := Base58Decode(rAddress, ALPHABET)
+	decoded, err := crypto.Base58Decode(rAddress, crypto.ALPHABET)
 	if err != nil {
 		return nil, err
 	}
@@ -113,5 +115,5 @@ func EncodeXAddress(accountId []byte, tag *uint32, test bool) string {
 	// add reserved bytes (4) when tag will be uint64
 	encoded = append(encoded, byte(0), byte(0), byte(0), byte(0))
 
-	return Base58Encode(encoded, ALPHABET)
+	return crypto.Base58Encode(encoded, crypto.ALPHABET)
 }
