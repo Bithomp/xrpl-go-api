@@ -15,6 +15,9 @@ go clean -i ./...
 
 # To import all the necessary modules
 go mod tidy
+
+# To update the modules
+go get -u ./...
 ```
 
 Generate address and seed
