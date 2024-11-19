@@ -10,11 +10,11 @@ import (
 
 // Based on https://github.com/rubblelabs/ripple/blob/master/crypto/util.go
 
-// Returns first 32 bytes of a SHA512 of the input bytes
-func Sha512Half(b []byte) []byte {
-	hasher := sha512.New()
+// Returns bytes of a SHA256 of the input bytes
+func Sha256(b []byte) []byte {
+	hasher := sha256.New()
 	hasher.Write(b)
-	return hasher.Sum(nil)[:32]
+	return hasher.Sum(nil)
 }
 
 // Returns bytes of a SHA256 double hash of the input bytes
@@ -34,4 +34,11 @@ func Sha256RipeMD160(b []byte) []byte {
 	sha.Write(b)
 	ripe.Write(sha.Sum(nil))
 	return ripe.Sum(nil)
+}
+
+// Returns first 32 bytes of a SHA512 of the input bytes
+func Sha512Half(b []byte) []byte {
+	hasher := sha512.New()
+	hasher.Write(b)
+	return hasher.Sum(nil)[:32]
 }

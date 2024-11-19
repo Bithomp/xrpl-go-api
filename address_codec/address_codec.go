@@ -7,7 +7,14 @@ import (
 )
 
 const (
+	// Account address (20 bytes)
 	ACCOUNT_ID = 0
+
+	// Account public key (33 bytes)
+	ACCOUNT_PUBLIC_KEY = 0x23
+
+	// 28; Validation public key (33 bytes)
+	NODE_PUBLIC = 0x1C
 )
 
 var (
@@ -67,6 +74,28 @@ func XAddressToClassicAddress(xAddress string) (string, *uint32, bool) {
 	return EncodeAccountID(accountId), tag, test
 }
 
+func NodePublicToClassicAddress(nodePublic string) (string, error) {
+	decoded, err := DecodeNodePublic(nodePublic)
+	if err != nil {
+		return "", err
+	}
+
+	accountID := crypto.Sha256RipeMD160(decoded)
+
+	return EncodeAccountID(accountID), nil
+}
+
+func NodePublicToXAddress(nodePublic string, tag *uint32, test bool) string {
+	decoded, err := DecodeNodePublic(nodePublic)
+	if err != nil {
+		return ""
+	}
+
+	accountID := crypto.Sha256RipeMD160(decoded)
+
+	return EncodeXAddress(accountID, tag, test)
+}
+
 func EncodeAccountID(accountId []byte) string {
 	// add payload length, 1 byte
 	encoded := append([]byte{byte(ACCOUNT_ID)}, accountId...)
@@ -84,6 +113,27 @@ func DecodeAccountID(rAddress string) ([]byte, error) {
 	decoded = decoded[1:]
 
 	if len(decoded) != 20 {
+		return nil, fmt.Errorf("invalid account id length")
+	}
+
+	return decoded, nil
+}
+
+func DecodeNodePublic(nodePublic string) ([]byte, error) {
+	decoded, err := crypto.Base58Decode(nodePublic, crypto.ALPHABET)
+	if err != nil {
+		return nil, err
+	}
+
+	// check payload
+	if decoded[0] != NODE_PUBLIC {
+		return nil, fmt.Errorf("invalid node public key")
+	}
+
+	// remove payload length, 1 byte
+	decoded = decoded[1:]
+
+	if len(decoded) != 33 {
 		return nil, fmt.Errorf("invalid account id length")
 	}
 
