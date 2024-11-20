@@ -16,6 +16,7 @@ func TestClassicAddressToXAddress(t *testing.T) {
 		xAddress string
 	}{
 		{"rsuUjfWxrACCAwGQDsNeZUhpzXf1n1NK5Z", nil, false, "X7czuu79XJ4GHhN5bsHDNyNjCrDFgjXw9rE9ELS86d47DXo"},
+		{"rHiJahydBswnAUMZk5yhTjTvcjBE1fXAGh", nil, false, "XVQT4qc3xZCA2agKHNTvqRNMKknq8BDqhRnEX6o9mV1GPC5"},
 		{"rsEUPfWoWZNikoqr9ZZg7vPpNgPG9XXB43", getUInt32Pointer(123), false, "X721hAAhjjN1AksX7aZLLtFG6Ks4zy63VEmzcFBdNmTdWUa"},
 		{"rsEUPfWoWZNikoqr9ZZg7vPpNgPG9XXB43", getUInt32Pointer(0), false, "X721hAAhjjN1AksX7aZLLtFG6Ks4zyeo1pUFGC3HrjJL2p4"},
 		{"rsEUPfWoWZNikoqr9ZZg7vPpNgPG9XXB43", getUInt32Pointer(123), true, "T7WPVhasbg8uPEF3juJfNt2Bwk2BWZMwSRjSvVR9qMW7kdu"},
