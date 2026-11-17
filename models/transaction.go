@@ -11,12 +11,8 @@ var (
 )
 
 func EncodeCTID(ledgerIndex uint32, txIndex uint16, networkID uint16) (string, error) {
-	if ledgerIndex > 0xFFFFFFF {
-		return "", ErrInvalidLedgerIndex
-	}
-
 	var ctidValue uint64 = 0xC000000000000000
-	ctidValue = ctidValue + uint64(ledgerIndex)<<32 | uint64(txIndex)<<16 | uint64(networkID)
+	ctidValue = ctidValue | uint64(ledgerIndex)<<32 | uint64(txIndex)<<16 | uint64(networkID)
 
 	hex := fmt.Sprintf("%X", ctidValue)
 
