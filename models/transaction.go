@@ -1,10 +1,18 @@
 package models
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
+
+var (
+	ErrInvalidLedgerIndex = errors.New("invalid ledger index")
+	ErrInvalidCTID        = errors.New("invalid CTID")
+)
 
 func EncodeCTID(ledgerIndex uint32, txIndex uint16, networkID uint16) (string, error) {
 	if ledgerIndex > 0xFFFFFFF {
-		return "", fmt.Errorf("ledgerIndex is too large")
+		return "", ErrInvalidLedgerIndex
 	}
 
 	var ctidValue uint64 = 0xC000000000000000
@@ -17,7 +25,7 @@ func EncodeCTID(ledgerIndex uint32, txIndex uint16, networkID uint16) (string, e
 
 func DecodeCTID(ctid string) (ledgerIndex uint32, txIndex uint16, networkID uint16, err error) {
 	if len(ctid) != 16 {
-		return 0, 0, 0, fmt.Errorf("invalid CTID")
+		return 0, 0, 0, ErrInvalidCTID
 	}
 
 	var ctidValue uint64
@@ -27,11 +35,11 @@ func DecodeCTID(ctid string) (ledgerIndex uint32, txIndex uint16, networkID uint
 	}
 
 	if ctidValue>>60 != 0xC {
-		return 0, 0, 0, fmt.Errorf("invalid CTID")
+		return 0, 0, 0, ErrInvalidCTID
 	}
 
-	ledgerIndex = uint32(ctidValue >> 32 & 0xFFFFFFF)
-	txIndex = uint16(ctidValue >> 16 & 0xFFFF)
+	ledgerIndex = uint32((ctidValue >> 32) & 0xFFFFFFF)
+	txIndex = uint16((ctidValue >> 16) & 0xFFFF)
 	networkID = uint16(ctidValue & 0xFFFF)
 
 	return ledgerIndex, txIndex, networkID, nil

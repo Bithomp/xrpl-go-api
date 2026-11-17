@@ -2,7 +2,6 @@ package crypto
 
 import (
 	"encoding/binary"
-	"fmt"
 	"math/big"
 
 	secp "github.com/decred/dcrd/dcrec/secp256k1/v4"
@@ -38,11 +37,11 @@ func GenerateSeedSecp256k1(entropy []byte) (string, error) {
 
 func DeriveKeypairSecp256k1(entropy []byte, sequence *uint32) ([]byte, []byte, error) {
 	if entropy == nil {
-		return nil, nil, fmt.Errorf("entropy is nil")
+		return nil, nil, ErrInvalidEntropy
 	}
 
 	if len(entropy) != ENTROPY_LENGTH {
-		return nil, nil, fmt.Errorf("entropy length is not correct")
+		return nil, nil, ErrInvalidEntropy
 	}
 
 	// This private generator represents the `root` private key, and is what's

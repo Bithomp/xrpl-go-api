@@ -1,7 +1,7 @@
 package address_codec
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/Bithomp/xrpl-go-api/crypto"
 )
@@ -22,6 +22,11 @@ var (
 	X_ADDRESS_PREFIX_BYTES_MAIN = []byte{0x05, 0x44}
 	// 4, 147
 	X_ADDRESS_PREFIX_BYTES_TEST = []byte{0x04, 0x93}
+)
+
+var (
+	ErrInvalidAccountID     = errors.New("invalid account id")
+	ErrInvalidNodePublicKey = errors.New("invalid node public key")
 )
 
 // https://github.com/XRPLF/xrpl.js/blob/main/packages/ripple-address-codec/src/index.ts#L25
@@ -113,7 +118,7 @@ func DecodeAccountID(rAddress string) ([]byte, error) {
 	decoded = decoded[1:]
 
 	if len(decoded) != 20 {
-		return nil, fmt.Errorf("invalid account id length")
+		return nil, ErrInvalidAccountID
 	}
 
 	return decoded, nil
@@ -127,14 +132,14 @@ func DecodeNodePublic(nodePublic string) ([]byte, error) {
 
 	// check payload
 	if decoded[0] != NODE_PUBLIC {
-		return nil, fmt.Errorf("invalid node public key")
+		return nil, ErrInvalidNodePublicKey
 	}
 
 	// remove payload length, 1 byte
 	decoded = decoded[1:]
 
 	if len(decoded) != 33 {
-		return nil, fmt.Errorf("invalid account id length")
+		return nil, ErrInvalidNodePublicKey
 	}
 
 	return decoded, nil

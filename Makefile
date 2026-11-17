@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := test
 
-.PHONY:fmt vet test
+.PHONY:fmt vet test update
 fmt:
 		go fmt ./...
 

@@ -3,7 +3,6 @@ package crypto
 import (
 	"bytes"
 	"crypto/ed25519"
-	"fmt"
 )
 
 const (
@@ -30,11 +29,11 @@ func GenerateSeedEd25519(entropy []byte) (string, error) {
 
 func DeriveKeypairEd25519(entropy []byte) ([]byte, []byte, error) {
 	if entropy == nil {
-		return nil, nil, fmt.Errorf("entropy is nil")
+		return nil, nil, ErrInvalidEntropy
 	}
 
 	if len(entropy) != ENTROPY_LENGTH {
-		return nil, nil, fmt.Errorf("entropy length is not correct")
+		return nil, nil, ErrInvalidEntropy
 	}
 
 	r := bytes.NewReader(Sha512Half(entropy))

@@ -2,11 +2,16 @@ package mptoken
 
 import (
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"math/big"
 	"strings"
 
 	"github.com/Bithomp/xrpl-go-api/address_codec"
+)
+
+var (
+	ErrInvalidMPTokenIssuanceID = errors.New("invalid MPToken issuance ID")
 )
 
 func BuildMPTokenIssuanceID(sequence uint32, issuer string) (string, error) {
@@ -30,7 +35,7 @@ func BuildMPTokenIssuanceID(sequence uint32, issuer string) (string, error) {
 
 func ParseMPTokenIssuanceID(mptIssuanceID string) (sequence uint32, issuer string, err error) {
 	if len(mptIssuanceID) != 48 {
-		return 0, "", fmt.Errorf("invalid length")
+		return 0, "", ErrInvalidMPTokenIssuanceID
 	}
 
 	// Parse sequence

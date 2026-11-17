@@ -2,13 +2,19 @@ package crypto
 
 import (
 	"crypto/rand"
-	"fmt"
+	"errors"
 )
 
 const (
 	ENTROPY_LENGTH      = 16
 	ALGORITHM_ED25519   = "ed25519"
 	ALGORITHM_SECP256K1 = "secp256k1"
+)
+
+var (
+	ErrInvalidAlgorithm = errors.New("invalid algorithm")
+	ErrInvalidSeed      = errors.New("invalid seed")
+	ErrInvalidEntropy   = errors.New("invalid entropy")
 )
 
 func GenerateEntropy() ([]byte, error) {
@@ -22,18 +28,19 @@ func GenerateEntropy() ([]byte, error) {
 }
 
 func GenerateSeed(algorithm string) (string, error) {
-	if algorithm == ALGORITHM_ED25519 {
+	switch algorithm {
+	case ALGORITHM_ED25519:
 		return GenerateSeedEd25519(nil)
-	} else if algorithm == ALGORITHM_SECP256K1 {
+	case ALGORITHM_SECP256K1:
 		return GenerateSeedSecp256k1(nil)
-	} else {
-		return "", fmt.Errorf("invalid algorithm")
+	default:
+		return "", ErrInvalidAlgorithm
 	}
 }
 
 func DecodeSeed(seed string) (string, []byte, error) {
 	if seed == "" {
-		return "", nil, fmt.Errorf("seed is empty")
+		return "", nil, ErrInvalidSeed
 	}
 
 	decoded, err := Base58Decode(seed, ALPHABET)
@@ -50,7 +57,7 @@ func DecodeSeed(seed string) (string, []byte, error) {
 		algorithm = ALGORITHM_SECP256K1
 		entropy = decoded[1:]
 	} else {
-		return "", nil, fmt.Errorf("invalid seed format")
+		return "", nil, ErrInvalidSeed
 	}
 
 	return algorithm, entropy, nil
@@ -68,7 +75,7 @@ func DeriveKeypair(seed string) ([]byte, []byte, error) {
 		sequence := uint32(0)
 		return DeriveKeypairSecp256k1(entropy, &sequence)
 	} else {
-		return nil, nil, fmt.Errorf("invalid algorithm")
+		return nil, nil, ErrInvalidAlgorithm
 	}
 }
 
@@ -104,7 +111,7 @@ func GenerateKeyPair(algorithm string) (string, []byte, []byte, error) {
 			return "", nil, nil, err
 		}
 	} else {
-		return "", nil, nil, fmt.Errorf("invalid algorithm")
+		return "", nil, nil, ErrInvalidAlgorithm
 	}
 
 	return seed, publicKey, privateKey, nil
