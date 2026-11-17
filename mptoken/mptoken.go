@@ -28,8 +28,6 @@ func BuildMPTokenIssuanceID(sequence uint32, issuer string) (string, error) {
 	accountHex := hex.EncodeToString(accountID)
 	accountHex = strings.ToUpper(accountHex)
 
-	fmt.Printf("Account Hex: %s\n", accountHex)
-
 	return seqHex + accountHex, nil
 }
 
