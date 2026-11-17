@@ -69,12 +69,13 @@ func DeriveKeypair(seed string) ([]byte, []byte, error) {
 		return nil, nil, err
 	}
 
-	if algorithm == ALGORITHM_ED25519 {
+	switch algorithm {
+	case ALGORITHM_ED25519:
 		return DeriveKeypairEd25519(entropy)
-	} else if algorithm == ALGORITHM_SECP256K1 {
+	case ALGORITHM_SECP256K1:
 		sequence := uint32(0)
 		return DeriveKeypairSecp256k1(entropy, &sequence)
-	} else {
+	default:
 		return nil, nil, ErrInvalidAlgorithm
 	}
 }
@@ -88,7 +89,8 @@ func GenerateKeyPair(algorithm string) (string, []byte, []byte, error) {
 	var seed string
 	var publicKey []byte
 	var privateKey []byte
-	if algorithm == ALGORITHM_ED25519 {
+	switch algorithm {
+	case ALGORITHM_ED25519:
 		seed, err = GenerateSeedEd25519(entropy)
 		if err != nil {
 			return "", nil, nil, err
@@ -99,7 +101,7 @@ func GenerateKeyPair(algorithm string) (string, []byte, []byte, error) {
 			return "", nil, nil, err
 		}
 
-	} else if algorithm == ALGORITHM_SECP256K1 {
+	case ALGORITHM_SECP256K1:
 		seed, err = GenerateSeedSecp256k1(entropy)
 		if err != nil {
 			return "", nil, nil, err
@@ -110,7 +112,7 @@ func GenerateKeyPair(algorithm string) (string, []byte, []byte, error) {
 		if err != nil {
 			return "", nil, nil, err
 		}
-	} else {
+	default:
 		return "", nil, nil, ErrInvalidAlgorithm
 	}
 

@@ -16,7 +16,7 @@ var (
 )
 
 var (
-	order = secp.S256().N
+	order = secp.Params().N
 	zero  = big.NewInt(0)
 	one   = big.NewInt(1)
 )
@@ -48,7 +48,7 @@ func DeriveKeypairSecp256k1(entropy []byte, sequence *uint32) ([]byte, []byte, e
 	// used by validators for signing when a keypair is generated from a seed.
 	privateGen := deriveScalar(entropy)
 	if sequence == nil {
-		privateKey := append([]byte{SECP256K1_PRIVATE_KEY_PREFIX}, privateGen.ToECDSA().D.Bytes()...)
+		privateKey := append([]byte{SECP256K1_PRIVATE_KEY_PREFIX}, privateGen.Serialize()...)
 		publicKey := privateGen.PubKey().SerializeCompressed()
 
 		return publicKey, privateKey, nil
@@ -59,7 +59,7 @@ func DeriveKeypairSecp256k1(entropy []byte, sequence *uint32) ([]byte, []byte, e
 	secpKey := generateKeyForSequence(privateGen.PubKey().SerializeCompressed(), *sequence)
 	secpKey.Key = *secpKey.Key.Add(&privateGen.Key)
 
-	privateKey := append([]byte{SECP256K1_PRIVATE_KEY_PREFIX}, secpKey.ToECDSA().D.Bytes()...)
+	privateKey := append([]byte{SECP256K1_PRIVATE_KEY_PREFIX}, secpKey.Serialize()...)
 	publicKey := secpKey.PubKey().SerializeCompressed()
 
 	return publicKey, privateKey, nil
